@@ -1,5 +1,3 @@
-CC=g++
-
 ifeq ($(DEBUG),yes)
 	CXXFLAGS=-Wall -g
 	LDFLAGS=-Wall -g
@@ -8,31 +6,22 @@ else
 	LDFLAGS=-Wall
 endif
 
-INCPATH=inc
+CC = g++
 SRCPATH=src
-OBJPATH=obj
-LIBPATH=lib
-BINPATH=bin
+LIBPATH=$(SRCPATH)/lib
+OBJECTS=$(SRCPATH)/tests.o
+TARGETS=tests
+INCLUDES=-I./$(LIBPATH)
 
-INC=$(INCPATH)/AddNumbers.h
-SRC=$(SRCPATH)/AddNumbers.cpp
-OBJ=$(OBJPATH)/AddNumbers.o
-OUT=$(LIBPATH)/libAddNumbers.so
+all: $(TARGETS)
 
-INCLUDES=-I ./$(INCPATH)
+tests: $(OBJECTS)
+	$(CC) $(LIBS) -o $(@) $(OBJECTS)
 
-default: $(OUT)
+$(SRCPATH)/%.o: $(SRCPATH)/%.cpp
+	$(CC) $(CXXFLAGS) $(INCLUDES) -c $< -o $@
 
-$(OUT): $(OBJ)
-	$(CC) $(LDFLAGS) -shared -o $@ $^
-
-$(OBJPATH)/%.o: $(SRCPATH)/%.cpp $(INC)
-	$(CC) $(CXXFLAGS) $(INCLUDES) -fpic -c $< -o $@
-
-.PHONY: clean cleanall
-
+install:
+	
 clean:
-	rm -f $(OBJPATH)/*.o
-
-cleanall: clean
-	rm -f $(OUT)
+	@rm -f $(SRCPATH)/*.o $(SRCPATH)/*.gch $(LIBPATH)/*.gch $(TARGETS)

@@ -1,6 +1,10 @@
 #ifndef JDW_HUD
 #define JDW_HUD
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 class HUD {
 public:
 	HUD();
@@ -18,4 +22,9 @@ private:
 	bool drawMessage;
 	int* font[256];
 };
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif
