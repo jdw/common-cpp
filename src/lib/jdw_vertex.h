@@ -2,29 +2,29 @@
 #define JDW_VERTEX
 
 template <class T>
-class Vertex {
+class JDW_Vertex {
 public:
-	Vertex() {
+	JDW_Vertex() {
 		this->pos.x = (T)0;
 		this->pos.y = (T)0;
 		this->pos.z = (T)0;
 		this->scr.x = 0;
 		this->scr.y = 0;
-	
+
 		calculated = false;
-		pNext = (Vertex<T>*)0;
+		pNext = (JDW_Vertex<T>*)0;
 	}
 
-	Vertex(V3<T> in_pos, V2<T> in_scr) {
+	JDW_Vertex(JDW_Vector3d<T> in_pos, JDW_Vector2d<T> in_scr) {
 		this->pos = in_pos;
 		this->scr = in_scr;
-	
+
 		calculated = false;
-		pNext = (Vertex<T>*)0;
+		pNext = (JDW_Vertex<T>*)0;
 	}
 
 	void Rotate(const T e){
-		V3<T> tmp = pos;
+		JDW_Vector3d<T> tmp = pos;
 		float tmp_cosE = cos(e);
 		float tmp_sinE = sin(e);
 
@@ -42,14 +42,19 @@ public:
 		tmp = pos;
 		//in_v.pos.x = tmp_cosE * tmp.x - tmp_sinE * tmp.y;
 		//in_v.pos.y = tmp_sinE * tmp.x + tmp_cosE * tmp.y;
-	
+
 		pos = tmp;
 	}
 
-	V3<T> pos;
-	V2<T> scr;
+	JDW_Vector3d<T> pos;
+	JDW_Vector2d<T> scr;
 	bool calculated;
-	Vertex* pNext;
+	JDW_Vertex* pNext;
 };
+
+typedef JDW_Vertex<int> iVtx;
+typedef JDW_Vertex<float> fVtx;
+typedef JDW_Vertex<double> dVtx;
+
 #endif
 

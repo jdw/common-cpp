@@ -1,9 +1,10 @@
+// SiC: Remove this file from lib
 #include "jdw_hud.h"
 
 HUD::HUD() {
 	drawFPS = false;
 	drawMessage = false;
-/*	
+/*
 	font['0'] = zero;
 	font['1'] = one;
 	font['2'] = two;
@@ -24,13 +25,13 @@ HUD::~HUD() {
 
 void HUD::Update() {
 	if (drawFPS) DrawFPS();
-	
+
 }
 
 void HUD::DrawFPS() {
-	
+
 }
 
 void HUD::DrawMessage() {
-	
+
 }

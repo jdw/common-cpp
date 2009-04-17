@@ -1,6 +1,7 @@
 #include "jdw_screen.h"
 #include <vector>
 
+// SiC: Remove this file from lib
 using namespace PixelToaster;
 
 #define abs(x) (((x) > 0)? (x): -1 * (x))
@@ -8,7 +9,7 @@ using namespace PixelToaster;
 Screen::Screen() {
 	size = V2<int>(640, 480);
 	std::vector<TrueColorPixel> pixels(size.x * size.y);
-	
+
 	pDisplay = new Display( "JDW's cube", size.x, size.y, Output::Windowed);
 	drawAxis = false;
 }
@@ -17,12 +18,12 @@ Screen::~Screen() {
 
 }
 
-void Screen::Update() {	
+void Screen::Update() {
 	if (drawAxis)
 		DrawAxis();
 
 	pDisplay->update(pixels);
-	
+
 	for (unsigned int i = 0; i < pixels.size(); i++) {
 			pixels[i].r = 0;
 			pixels[i].g = 0;
@@ -41,10 +42,10 @@ void Screen::PutPixel(const int& in_x, const int& in_y) {
 
 	if ((pixels[in_x + in_y * size.x].r + clr.r) > 255) pixels[in_x + in_y * size.x].r = 255;
 	else pixels[in_x + in_y * size.x].r += clr.r;
-	
+
 	if (pixels[in_x + in_y * size.x].g + clr.g > 255) pixels[in_x + in_y * size.x].g = 255;
 	else pixels[in_x + in_y * size.x].g += clr.g;
-	
+
 	if (pixels[in_x + in_y * size.x].b + clr.b > 255) pixels[in_x + in_y * size.x].b = 255;
 	else pixels[in_x + in_y * size.x].b += clr.b;
 }
@@ -79,7 +80,7 @@ void Screen::DrawLine(const V2<int>& in_p0, const V2<int>& in_p1) {
 	int numadd = 0;
 	int numpixels = 0;
 	int curpixel = 0;
-	
+
 	if (in_p1.x >= in_p0.x) { // The x-values are increasing
 		xinc1 = 1;
 		xinc2 = 1;

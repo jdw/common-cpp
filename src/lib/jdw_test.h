@@ -5,11 +5,10 @@
  *      Author: jdw
  */
 
-#ifndef JDW_TEST_H_
-#define JDW_TEST_H_
+#ifndef JDW_TEST
+#define JDW_TEST
 
 #include <iostream>
-#include "jdw_misc.h"
 
 #define TEST_TRUE(x)\
 	if ((x) != TRUE) {\
@@ -43,4 +42,4 @@
 		exit(1);\
 	}
 
-#endif /* JDW_TEST_H_ */
+#endif
