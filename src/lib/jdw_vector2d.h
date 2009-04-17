@@ -20,7 +20,7 @@ public:
 
 	double GetLength() const { // Gets length of vector
 		double tmp = sqrt(this->GetDP(*this));
-		return (0.999 <= tmp && tmp <= 1.001)? 1.0 : tmp;
+		return (0.999 <= tmp && tmp <= 1.001)? 1.0 : tmp; // SiC
 	}
 
 	double GetDist(const JDW_Vector2d<T>& in) const { // Returns distance between two vectors

@@ -12,7 +12,7 @@ public:
 		this->scr.y = 0;
 
 		calculated = false;
-		pNext = (JDW_Vertex<T>*)0;
+		pNext = NULL;
 	}
 
 	JDW_Vertex(JDW_Vector3d<T> in_pos, JDW_Vector2d<T> in_scr) {
@@ -20,7 +20,7 @@ public:
 		this->scr = in_scr;
 
 		calculated = false;
-		pNext = (JDW_Vertex<T>*)0;
+		pNext = NULL;
 	}
 
 	void Rotate(const T e){

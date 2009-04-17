@@ -5,6 +5,10 @@ template <class T>
 class JDW_Polygon {
 public:
 	JDW_Polygon(JDW_Vertex<T>* in_o, JDW_Vertex<T>* in_a, JDW_Vertex<T>* in_b) {
+		TEST_PTR(in_o);
+		TEST_PTR(in_a);
+		TEST_PTR(in_b);
+
 		this->o = in_o; // Keep 'em counterclockwise!
 		this->a = in_a;
 		this->b = in_b;

@@ -21,10 +21,12 @@ using namespace std;
 
 void test_v2() {
 	dV2 tmp = dV2();
-
 	// Testing default values
 	TEST_TRUE(tmp.x == 0);
 	TEST_TRUE(tmp.y == 0);
+
+	int* ptr = NULL;
+	TEST_PTR(ptr);
 
 	// Testing operators
 	// =
