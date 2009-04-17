@@ -14,19 +14,16 @@ public:
 		this->y = (T)0;
 	}
 
-	T GetDP(const V2& in) const { // Dot-product
+	T GetDP(const V2<T>& in) const { // Dot-product
 		return this->x * in.x + this->y * in.y;
 	}
 
-	V2<T> GetXP(const V2& in) const { // Cross-prodcut
-		return V2<T>(this->x * in.x, this->y * in.y);
-	}
-
 	double GetLength() const { // Gets length of vector
-		return sqrt(this->GetDP(*this));
+		double tmp = sqrt(this->GetDP(*this));
+		return (0.999 <= tmp && tmp <= 1.001)? 1.0 : tmp;
 	}
 
-	double GetDist(const V2& in) const { // Returns distance between two vectors
+	double GetDist(const V2<T>& in) const { // Returns distance between two vectors
 		if (this == &in) return 0; // Same variables
 		if (*this == in) return 0; // Same values
 

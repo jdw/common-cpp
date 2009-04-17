@@ -16,37 +16,46 @@ public:
 		this->z = (T)0;
 	}
 
-	T GetDP(const V3<T> in) const { // Dot-product
+	T GetDP(const V3<T>& in) const { // Dot-product
 		return this->x * in.x + this->y * in.y + this->z * in.z;
 	}
 
 	V3<T> GetXP(const V3<T>& in) const { // Cross-prodcut
 		// A x B -> A=this, B=in
 		return V3<T>((this->y * in.z) - (this->z * in.y),
-			           (this->z * in.x) - (this->x * in.z),
-			           (this->x * in.y) - (this->y * in.x));
+			         (this->z * in.x) - (this->x * in.z),
+			         (this->x * in.y) - (this->y * in.x));
 	}
 
 	T GetLength() const { // Gets length of vector
-		return sqrt(this->GetDP(*this));
+		double tmp = sqrt(this->GetDP(*this));
+		return (0.999 <= tmp && tmp <= 1.001)? 1.0 : tmp;
 	}
 
-	T GetDist(const V3& in) const { // Returns distance between two vectors
+	double GetDist(const V3<T>& in) const { // Returns distance between two vectors
+		if (this == &in) return 0; // Same variables
+		if (*this == in) return 0; // Same values
+
 		T dX = this->x - in.x;
 		T dY = this->y - in.y;
 		T dZ = this->z - in.z;
+
 		return sqrt(dX * dX + dY * dY + dZ * dZ);
 	}
 
-	V3<T> GetUnit() const { // Returns a unit vector
-		T length = this->GetLength();
-		return V3<T>(this->x / length, this->y / length, this->z / length);
+	V3<double> GetUnit() const { // Returns a unit vector
+		double length = this->GetLength();
+		return V3<double>(this->x / length, this->y / length, this->z / length);
 	}
 
-	void operator=(const V3<T>& in) {
+	V3<T>& operator=(const V3<T>& in) {
+		if (this == &in) return *this;
+
 		this->x = in.x;
 		this->y = in.y;
 		this->z = in.z;
+
+		return *this;
 	}
 
 	bool operator==(const V3<T>& in) const {
@@ -58,11 +67,7 @@ public:
 	}
 
 	bool operator!=(const V3<T>& in) const {
-		if (this->x == in.x) return false;
-		if (this->y == in.y) return false;
-		if (this->z == in.z) return false;
-
-		return true;
+		return !(*this == in);
 	}
 
 	void operator+=(const V3<T>& in) {
