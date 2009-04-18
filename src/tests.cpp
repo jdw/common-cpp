@@ -16,6 +16,7 @@
 #include "lib/jdw_polygon.h"
 #include "lib/jdw_camera.h"
 #include "lib/jdw_cube.h"
+#include "lib/jdw_improvedperlinnoise.h"
 
 using namespace std;
 
@@ -24,9 +25,6 @@ void test_v2() {
 	// Testing default values
 	TEST_TRUE(tmp.x == 0);
 	TEST_TRUE(tmp.y == 0);
-
-	int* ptr = NULL;
-	TEST_PTR(ptr);
 
 	// Testing operators
 	// =
