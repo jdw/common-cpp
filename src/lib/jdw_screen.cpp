@@ -22,12 +22,12 @@ void Screen::Update() {
 	if (drawAxis)
 		DrawAxis();
 
-	pDisplay->update(pixels);
+	pDisplay->update(pixel);
 
-	for (unsigned int i = 0; i < pixels.size(); i++) {
-			pixels[i].r = 0;
-			pixels[i].g = 0;
-			pixels[i].b = 0;
+	for (unsigned int i = 0; i < pixel.size(); i++) {
+			pixel[i].r = 0;
+			pixel[i].g = 0;
+			pixel[i].b = 0;
 		}
 }
 
@@ -40,14 +40,14 @@ void Screen::PutPixel(const int& in_x, const int& in_y) {
 	if (!(in_x >= 0 && in_x < size.x)) return;
 	if (!(in_y >= 0 && in_y < size.y)) return;
 
-	if ((pixels[in_x + in_y * size.x].r + clr.r) > 255) pixels[in_x + in_y * size.x].r = 255;
-	else pixels[in_x + in_y * size.x].r += clr.r;
+	if ((pixel[in_x + in_y * size.x].r + clr.r) > 255) pixel[in_x + in_y * size.x].r = 255;
+	else pixel[in_x + in_y * size.x].r += clr.r;
 
-	if (pixels[in_x + in_y * size.x].g + clr.g > 255) pixels[in_x + in_y * size.x].g = 255;
-	else pixels[in_x + in_y * size.x].g += clr.g;
+	if (pixel[in_x + in_y * size.x].g + clr.g > 255) pixel[in_x + in_y * size.x].g = 255;
+	else pixel[in_x + in_y * size.x].g += clr.g;
 
-	if (pixels[in_x + in_y * size.x].b + clr.b > 255) pixels[in_x + in_y * size.x].b = 255;
-	else pixels[in_x + in_y * size.x].b += clr.b;
+	if (pixel[in_x + in_y * size.x].b + clr.b > 255) pixel[in_x + in_y * size.x].b = 255;
+	else pixel[in_x + in_y * size.x].b += clr.b;
 }
 
 // --- PRiVATE ---

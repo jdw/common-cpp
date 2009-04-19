@@ -91,6 +91,7 @@ public:
 typedef JDW_Vector2d<int> iV2;
 typedef JDW_Vector2d<double> dV2;
 typedef JDW_Vector2d<float> fV2;
+typedef JDW_Vector2d<unsigned long> ulV2;
 
 #endif
 

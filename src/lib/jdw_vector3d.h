@@ -106,6 +106,6 @@ public:
 typedef JDW_Vector3d<int> iV3;
 typedef JDW_Vector3d<double> dV3;
 typedef JDW_Vector3d<float> fV3;
-
+typedef JDW_Vector3d<unsigned long> ulV3;
 #endif
 
