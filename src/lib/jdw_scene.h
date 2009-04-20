@@ -1,63 +1,59 @@
 #ifndef JDW_SCENE
 #define JDW_SCENE
 
-template <class T> class Camera;
-//template <class T, class U> class Cube;
-template <class T> class Vertex;
-#include <vector>
-template <class T> class V3;
-template <class T> class Camera;
+#include "jdw_misc.h"
+#include "jdw_object.h"
+#include "jdw_list.h"
 
-template <class T>
-class Scene {
+namespace SceneStatus {
+	enum Enum {
+		PAUSED	= 1 << 0,
+		DONE	= 1 << 1
+	};
+}
+
+namespace SceneType {
+	enum Enum {
+		TWOD = 0,
+		THREED,
+		RAYTRACED,
+
+		MAX // Faulty
+	};
+}
+
+class JDW_Scene {
 public:
-	~Scene() {
-	}
-	
-	int GetCamCount() const { return pCam->size(); }
-	Camera<T>* GetCam(int i) { return pCam[i]; }
-	int GetObjCount() const { return pObj->size(); }
-	void AddObj(Cube<T>* in) { pObj->push_back(in); }
-	void AddCam(Camera<T>* in) { pCam->push_back(in); }
+	virtual ~JDW_Scene() {
 
-	const bool& IsRolling() const { return isRolling; }
+	}
+
+	int GetObjCount() const { return pObj->Size(); }
+	//void AddObj(JDW_Object* in) { pObj->Add(in); }
+	const bool Paused() const { return status & SceneStatus::PAUSED; }
+	const bool Done() const { return status & SceneStatus::DONE; }
+	void SetPaused() { status |= SceneStatus::PAUSED; }
+	void SetDeltaTime(const double& in_dT) { deltaTime = in_dT; }
+	const double& GetDeltaTime() { return deltaTime; }
+	const double& GetTotalTime() { return totalTime; }
+	void UpdateTotalTime() { totalTime += deltaTime; }
 
 	virtual void Update() = 0;
-	
+
 protected:
-	Scene() {
-		POV = V3<T>(0, 0, 1);
-		isRolling = true;
+	JDW_Scene(const SceneType::Enum in_type)
+	: type(in_type) {
+		deltaTime = 0.0;
+		totalTime = 0.0;
 	}
 
-	void Project(Vertex<T>& in_v, const T e) {
-		/*
-		V3<T> cr = pCurrentCam->GetRot();
-		V3<T> cp = pCurrentCam->GetPos();
-		V3<T> v = pCurrentCam->GetPos() - POV;
-		V3<T> d();
-	
-		/// Projection
-		d.x = cos(cr.y) * (sin(cr.z) * (in_v.pos.y - cp.y) + cos(cr.z) * (in_v.pos.x - cp.x)) - sin(cr.y) * (in_v.pos.z - cp.z);
-		d.y = sin(cr.x) * (cos(cr.y) * (in_v.pos.z - cp.z) + sin(cr.y) * (sin(cr.z) * (in_v.pos.y - cp.y) + cos(cr.z) * (in_v.pos.x - cp.x))) + cos(cr.x) * (cos(cr.z) * (in_v.pos.y - cp.y) - sin(cr.z) * (in_v.pos.x - cp.x));
-		d.z = cos(cr.x) * (cos(cr.y) * (in_v.pos.z - cp.z) + sin(cr.y) * (sin(cr.z) * (in_v.pos.y - cp.y) + cos(cr.z) * (in_v.pos.x - cp.x))) - sin(cr.x) * (cos(cr.z) * (in_v.pos.y - cp.y) - sin(cr.z) * (in_v.pos.x - cp.x));
+	JDW_List<JDW_Object*>* pObj;
 
-		if (d.z == 0.0f) d.z = 1.0f;
-		in_v.scr.x = (d.x - v.x) * (v.z / d.z);
-		in_v.scr.y = (d.y - v.y) * (v.z / d.z);
-
-		in_v.calculated = true;
-		*/
-	}
-	
-	std::vector<Camera<T>*>* pCam;
-	Camera<T>* pCurrentCam;
-	std::vector<Cube<T>*>* pObj;
-	V3<T> POV;
-public:
-	bool isRolling; // Scene still rolling (true) or finnished (false)
-	
 private:
+	int status;
+	const SceneType::Enum type;
+	double deltaTime; // Time since last update
+	double totalTime; // Total time running
 };
 
 #endif

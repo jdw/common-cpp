@@ -8,6 +8,9 @@
 #include <iostream>
 #include <math.h>
 
+// Tests won't run without 'DEBUG'
+#define DEBUG 1
+
 #include "lib/jdw_vector2d.h"
 #include "lib/jdw_vector3d.h"
 #include "lib/jdw_misc.h"
@@ -17,6 +20,7 @@
 #include "lib/jdw_camera.h"
 #include "lib/jdw_cube.h"
 #include "lib/jdw_improvedperlinnoise.h"
+#include "lib/jdw_list.h"
 
 using namespace std;
 
@@ -141,11 +145,40 @@ void test_v3() {
 	TEST_VAL(tmp.GetUnit().GetLength(), 1.0);
 }
 
+void test_list() {
+	int val = 1;
+	iList* tmp = new iList(new int(val));
+	int sum = val;
+	val++;
+	TEST_PTR(tmp);
+	TEST_PTR(tmp->pObj);
+
+	for (; val < 6; val++) {
+		sum += val;
+		tmp->Add(new int(val));
+	}
+
+	TEST_VAL(tmp->Size(), 5);
+
+	iList* it = tmp;
+	int it_sum = 0;
+	while (it != NULL) {
+		if (it->pObj != NULL) it_sum += *it->pObj;
+		it = it->pNext;
+	}
+
+	tmp->DelAllObj();
+	delete tmp;
+
+	TEST_VAL(it_sum, sum);
+}
+
 int main() {
 	// All tests should go trough OK, and if so, no output be given.
 
 	test_v2();
 	test_v3();
+	test_list();
 
 	exit(0);
 }

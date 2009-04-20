@@ -16,12 +16,13 @@ public:
 		pixel = (T*)malloc(size.x * size.y * sizeof(T));
 		for (int i = 0; i < size.x * size.y; ++i)
 			pixel[i] = T();
+
+		trans = T();
 	}
 
 	JDW_Image(const iV2 in_size, T* in_pixel)
 	: size(in_size), pixel(in_pixel) {
-		for (int i = 0; i < size.x * size.y; ++i)
-			pixel[i] = T();
+		trans = T();
 	}
 
 	~JDW_Image() {
@@ -35,9 +36,10 @@ public:
 					this->PutPixel(iV2(x + in_offset.x, y + in_offset.y), in_pFrom->GetPixel(iV2(x, y)));
 	}
 
-	void PutPixel(const iV2 in_pos, const T& in_pixel) { pixel[in_pos.x + size.x * in_pos.y] = in_pixel; }
+	void PutPixel(const iV2 in_pos, const T in_pixel) { pixel[in_pos.x + size.x * in_pos.y] = in_pixel; }
 	T GetTrans() { return trans; }
 	T* GetPixels() { return pixel; }
+	void SetPixels(T* in_p) { pixel = in_p; }
 	void SetTrans(const T& in) { trans = in; }
 	const T& GetPixel(const iV2 in_pos) { return pixel[in_pos.x + size.x * in_pos.y]; }
 	const iV2& GetSize() { return size; }

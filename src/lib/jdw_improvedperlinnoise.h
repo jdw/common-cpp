@@ -7,6 +7,7 @@
 
 #ifndef JDW_IMPROVEDPERLINNOISE
 #define JDW_IMPROVEDPERLINNOISE
+#include <math.h>
 
 #define SIZEOFPERM 256
 
