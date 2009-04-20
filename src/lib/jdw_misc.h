@@ -6,11 +6,11 @@
 #endif
 
 #ifndef PI
-#define PI 3.14159265f;
+#define PI 3.14159265;
 #endif
 //#define E = 0.01f
 // ~60 FPS
-#define FPS 0.0166666667f
+#define FPS 0.0166666667
 
 #ifndef FALSE
 #define FALSE 0

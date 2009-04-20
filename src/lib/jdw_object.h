@@ -19,11 +19,11 @@ namespace JDW_ObjectType {
 
 class JDW_Object {
 public:
-	JDW_ObjectType::Enum GetType() { return type; }
+	const JDW_ObjectType::Enum& GetObjectType() { return objectType; }
 
 protected:
 	JDW_Object(const JDW_ObjectType::Enum in_type)
-	: type(in_type) {
+	: objectType(in_type) {
 
 	}
 
@@ -31,9 +31,8 @@ protected:
 
 	}
 
-	const JDW_ObjectType::Enum type;
-
 private:
+	const JDW_ObjectType::Enum objectType;
 };
 
 #endif
