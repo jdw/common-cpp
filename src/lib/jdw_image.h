@@ -8,45 +8,88 @@
 #ifndef JDW_IMAGE
 #define JDW_IMAGE
 
+//#include <vector>
+#include "jdw_test.h"
+
+namespace JDW_PixelDrawMode {
+	enum Enum {
+		COPY = 0, // pixel[x][y] = in_pixel;
+		ADD, // pixel[x][y] += in_pixel;
+		MULTI, // pixel[x][y] *= in_pixel;
+		ONBLACKONLY, // if (pixel[x][y].r == 0 && pixel[x][y].g == 0 && pixel[x][y].b == 0) pixel[x][y] = in_pixel;
+		ONREDONLY, // if (pixel[x][y].g == 0 && pixel[x][y].b == 0) pixel[x][y] = in_pixel;
+		ONGREENONLY, // if (pixel[x][y].r == 0 && pixel[x][y].b == 0) pixel[x][y] = in_pixel;
+		ONBLUEONLY, // if (pixel[x][y].r == 0 && pixel[x][y].g == 0) pixel[x][y] = in_pixel;
+		ONGREYONLY, // if (pixel[x][y].r != 0 && pixel[x][y].g != 0 && pixel[x][y].b != 0) pixel[x][y] = in_pixel;
+		ONWHITEONLY, // if (pixel[x][y].r == 255 && pixel[x][y].g == 255 && pixel[x][y].b == 255) pixel[x][y] = in_pixel;
+
+		MAX // Faulty
+	};
+}
+
 template <class T>
 class JDW_Image {
 public:
-	JDW_Image(const iV2 in_size)
+	JDW_Image(const iV2& in_size)
 	: size(in_size) {
-		pixel = (T*)malloc(size.x * size.y * sizeof(T));
+		//pixel = (T*)malloc(size.x * size.y * sizeof(T));
+		pixel = new T[size.x * size.y];
+		//pixel = std::vector<T>();
 		for (int i = 0; i < size.x * size.y; ++i)
 			pixel[i] = T();
 
 		trans = T();
 	}
-
+/*
 	JDW_Image(const iV2 in_size, T* in_pixel)
 	: size(in_size), pixel(in_pixel) {
 		trans = T();
 	}
-
+*/
 	~JDW_Image() {
-		delete[] pixel;
+		//delete[] pixel;
 	}
 
-	void Blit(const iV2& in_offset, JDW_Image* in_pFrom) {
+	void Blit(const iV2& in_offset, JDW_Image* const in_pFrom, const JDW_PixelDrawMode::Enum in_mode = JDW_PixelDrawMode::COPY) {
 		for (int y = 0; y < in_pFrom->GetSize().y; ++y)
 			for (int x = 0; x < in_pFrom->GetSize().x; ++x)
-				if (this->IsInside(iV2(x + in_offset.x, y + in_offset.y))) // iv2 + iv2?
-					this->PutPixel(iV2(x + in_offset.x, y + in_offset.y), in_pFrom->GetPixel(iV2(x, y)));
+				this->PutPixel(iV2(x + in_offset.x, y + in_offset.y),
+					           in_pFrom->GetPixel(iV2(x, y)),
+					           in_mode);
 	}
 
-	void PutPixel(const iV2 in_pos, const T in_pixel) { pixel[in_pos.x + size.x * in_pos.y] = in_pixel; }
+	void PutPixel(const iV2& in_pos, const T& in_pixel, const JDW_PixelDrawMode::Enum in_mode = JDW_PixelDrawMode::COPY) {
+		TEST_TRUE(in_mode < JDW_PixelDrawMode::MAX);
+		if (!(IsInside(in_pos))) return;
+		int tmp_pos = in_pos.x + size.x * in_pos.y;
+		switch (in_mode) {
+			case JDW_PixelDrawMode::COPY: pixel[tmp_pos] = in_pixel; break;
+			case JDW_PixelDrawMode::ADD: pixel[tmp_pos].r += in_pixel.r; pixel[tmp_pos].g += in_pixel.g; pixel[tmp_pos].b += in_pixel.b; break;
+			case JDW_PixelDrawMode::MULTI: pixel[tmp_pos].r *= in_pixel.r; pixel[tmp_pos].g *= in_pixel.g; pixel[tmp_pos].b *= in_pixel.b; break;
+			case JDW_PixelDrawMode::ONBLACKONLY: if (pixel[tmp_pos].r == 0 && pixel[tmp_pos].g == 0 && pixel[tmp_pos].b == 0) pixel[tmp_pos] = in_pixel; break;
+			case JDW_PixelDrawMode::ONREDONLY: if (pixel[tmp_pos].g == 0 && pixel[tmp_pos].b == 0) pixel[tmp_pos] = in_pixel; break;
+			case JDW_PixelDrawMode::ONGREENONLY: if (pixel[tmp_pos].r == 0 && pixel[tmp_pos].b == 0) pixel[tmp_pos] = in_pixel; break;
+			case JDW_PixelDrawMode::ONBLUEONLY: if (pixel[tmp_pos].r == 0 && pixel[tmp_pos].g == 0) pixel[tmp_pos] = in_pixel; break;
+			case JDW_PixelDrawMode::ONGREYONLY: if (pixel[tmp_pos].r != 0 && pixel[tmp_pos].g != 0 && pixel[tmp_pos].b != 0) pixel[tmp_pos] = in_pixel; break;
+			case JDW_PixelDrawMode::ONWHITEONLY: if (pixel[tmp_pos].r == 255 && pixel[tmp_pos].g == 255 && pixel[tmp_pos].b == 255) pixel[tmp_pos] = in_pixel; break;
+			default: TEST_TRUE(FALSE); break; // If new modes are implemented, we will be told...
+		}
+	}
+
 	T GetTrans() { return trans; }
 	T* GetPixels() { return pixel; }
+	//std::vector<T> GetPixels() { return pixel; }
 	void SetPixels(T* in_p) { pixel = in_p; }
 	void SetTrans(const T& in) { trans = in; }
-	const T& GetPixel(const iV2 in_pos) { return pixel[in_pos.x + size.x * in_pos.y]; }
+	const T GetPixel(const iV2 in_pos) { return pixel[in_pos.x + size.x * in_pos.y]; }
 	const iV2& GetSize() { return size; }
 
 	void Black() {
-		for (int i = 0; i < size.x * size.y; ++i)
-			pixel[i].integer = 0;
+		for (int i = 0; i < size.x * size.y; ++i) {
+			pixel[i].r = 0;
+			pixel[i].g = 0;
+			pixel[i].b = 0;
+		}
 	}
 
 	bool IsInside(const iV2& in_pos) {
@@ -56,7 +99,7 @@ public:
 		return TRUE;
 	}
 
-	void DrawLine(const iV2& in_p0, const iV2& in_p1) {
+	void DrawLine(const iV2& in_p0, const iV2& in_p1, const T& in_pixel, const JDW_PixelDrawMode::Enum in_mode = JDW_PixelDrawMode::COPY) {
 		int deltax = abs(in_p1.x - in_p0.x);        // The difference between the x's
 		int deltay = abs(in_p1.y - in_p0.y);        // The difference between the y's
 		int x = in_p0.x;                       // Start x off at the first pixel
@@ -107,7 +150,7 @@ public:
 		}
 
 		for (curpixel = 0; curpixel <= numpixels; curpixel++) {
-			PutPixel(x, y);             // Draw the current pixel
+			PutPixel(iV2(x, y), in_pixel, in_mode);             // Draw the current pixel
 			num += numadd;              // Increase the numerator by the top of the fraction
 			if (num >= den) {           // Check if numerator >= denominator
 				num -= den;               // Calculate the new numerator value
@@ -121,6 +164,7 @@ public:
 
 	const iV2 size;
 	T* pixel;
+	//std::vector<T> pixel;
 	T trans;
 };
 
