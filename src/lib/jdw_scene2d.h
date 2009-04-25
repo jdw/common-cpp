@@ -11,25 +11,25 @@
 #include "jdw_scene.h"
 #include "jdw_vector2d.h"
 #include "jdw_image.h"
+//#include "jdw_types.h"
 
 class JDW_Scene2d: public JDW_Scene {
 public:
 	JDW_Scene2d(const SceneType::Enum in_type, const iV2& in_size)
 	: JDW_Scene(in_type) {
-		pScreen = new Image(in_size);
-		pScreen->GetPixels();
+		spScreen = boost::shared_ptr<JDW_Image<JDW_Pixel, JDW_Pixel> >(new JDW_Image<JDW_Pixel, JDW_Pixel>(in_size));
 	}
 
 	virtual ~JDW_Scene2d() {
 
 	}
 
-	Image* GetImage() { return pScreen; }
+	JDW_Image<JDW_Pixel, JDW_Pixel>* GetScreen() const { return spScreen.get(); }
 
 	virtual void Update() = 0;
 
 protected:
-	Image* pScreen;
+	boost::shared_ptr<JDW_Image<JDW_Pixel, JDW_Pixel> > spScreen;
 
 private:
 };
