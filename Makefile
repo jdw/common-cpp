@@ -1,9 +1,9 @@
 ifeq ($(DEBUG),yes)
-	CXXFLAGS=-Wall -g
+	CXXFLAGS=-Wall -g -std=c++98
 	LDFLAGS=-Wall -g
 	DEFENITIONS= -D DEBUG=1
 else
-	CXXFLAGS=-Wall
+	CXXFLAGS=-Wall -std=c++98
 	LDFLAGS=-Wall
 	DEFENITIONS=
 endif
@@ -28,4 +28,4 @@ install:
 	@cp -f $(LIBPATH)/*h $(HOMEINC)
 	
 clean:
-	@rm -f $(SRCPATH)/*.o $(SRCPATH)/*.gch $(LIBPATH)/*.gch $(TARGETS)
+	@rm -f $(SRCPATH)/*.o $(SRCPATH)/*.gch $(LIBPATH)/*.gch $(TARGETS) *.data
