@@ -10,6 +10,10 @@ public:
 		this->z = in_z;
 	}
 
+	JDW_Vector3d(const JDW_Vector3d<T>& in_v) {
+		*this = in_v;
+	}
+
 	JDW_Vector3d() {
 		this->x = (T)0;
 		this->y = (T)0;
@@ -103,9 +107,10 @@ public:
 	T x, y, z;
 };
 
-typedef JDW_Vector3d<int> iV3;
-typedef JDW_Vector3d<double> dV3;
-typedef JDW_Vector3d<float> fV3;
-typedef JDW_Vector3d<unsigned long> ulV3;
+typedef JDW_Vector3d<i32> iV3;
+typedef JDW_Vector3d<d64> dV3;
+//typedef JDW_Vector3d<float> fV3;
+typedef JDW_Vector3d<ul32> ulV3;
+
 #endif
 
