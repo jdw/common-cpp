@@ -1,12 +1,18 @@
 #ifndef JDW_VECTOR2D
 #define JDW_VECTOR2D
 
+#include "jdw_types.h"
+
 template <class T>
 class JDW_Vector2d {
 public:
 	JDW_Vector2d(T in_x, T in_y) {
 		this->x = in_x;
 		this->y = in_y;
+	}
+
+	JDW_Vector2d(const JDW_Vector2d& in_v) {
+		*this = in_v;
 	}
 
 	JDW_Vector2d() {
@@ -88,10 +94,10 @@ public:
 	T x, y;
 };
 
-typedef JDW_Vector2d<int> iV2;
-typedef JDW_Vector2d<double> dV2;
-typedef JDW_Vector2d<float> fV2;
-typedef JDW_Vector2d<unsigned long> ulV2;
+typedef JDW_Vector2d<i32> iV2;
+typedef JDW_Vector2d<d64> dV2;
+//typedef JDW_Vector2d<float> fV2;
+typedef JDW_Vector2d<ul32> ulV2;
 
 #endif
 
