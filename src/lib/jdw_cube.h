@@ -7,7 +7,6 @@ public:
 	JDW_Cube(const JDW_Vector3d<T> in_o, const T in_sides/*, const U in_clr*/) {
 		this->o = in_o;
 		this->sides = in_sides;
-		//this->clr = in_clr;
 		this->pVertexList = (JDW_Vertex<T>*)0;
 		float halfSide = this->sides / 2.0f;
 
@@ -67,8 +66,10 @@ public:
 	}
 
 	~JDW_Cube() {
-		for(int i = 0; i < 12; ++i) {
-			//delete pPolys[i];
+		delete[] pPolys;
+		JDW_Vertex<T>* pTmp;
+		while (pTmp->pNext != (JDW_Vertex<T>*)0) {
+
 		}
 	}
 
@@ -124,7 +125,6 @@ private:
 
 	JDW_Vector3d<T> o;
 	T sides;
-	//U clr; // (SiC) Replace with "material", FFS
 	JDW_Polygon<T>* pPolys[12];
 	JDW_Vertex<T>* pVertexList;
 };
