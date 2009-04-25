@@ -13,7 +13,10 @@
 namespace JDW_ActorType {
 	enum Enum {
 		CIRCLE = 0,
+		SQUARE,
 		CUBE,
+		SPHERE,
+		RECTANGLE,
 
 		MAX // Faulty
 	};
@@ -40,8 +43,10 @@ public:
 	const T& GetPos() { return pos; }
 	const JDW_ActorType::Enum& GetActorType() const { return actorType; }
 
+	protected:
+		T pos;
 private:
-	T pos;
+
 	const JDW_ActorType::Enum actorType;
 };
 
