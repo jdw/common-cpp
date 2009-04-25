@@ -6,11 +6,13 @@
  */
 
 #include <iostream>
+#include <fstream>
 #include <math.h>
 
 // Tests won't run without 'DEBUG'
 #define DEBUG 1
 
+#include "lib/jdw_types.h"
 #include "lib/jdw_vector2d.h"
 #include "lib/jdw_vector3d.h"
 #include "lib/jdw_misc.h"
@@ -21,10 +23,12 @@
 #include "lib/jdw_cube.h"
 #include "lib/jdw_improvedperlinnoise.h"
 #include "lib/jdw_list.h"
+#include "lib/jdw_pixel.h"
+#include "lib/jdw_image.h";
 
 using namespace std;
 
-void test_v2() {
+void TestVector2d() {
 	dV2 tmp = dV2();
 	// Testing default values
 	TEST_TRUE(tmp.x == 0);
@@ -80,7 +84,7 @@ void test_v2() {
 	TEST_VAL(tmp.GetUnit().GetLength(), 1);
 }
 
-void test_v3() {
+void TestVector3d() {
 	dV3 tmp = dV3();
 
 	// Testing default values
@@ -145,7 +149,7 @@ void test_v3() {
 	TEST_VAL(tmp.GetUnit().GetLength(), 1.0);
 }
 
-void test_list() {
+void TestList() {
 	int val = 1;
 	iList* tmp = new iList(new int(val));
 	int sum = val;
@@ -173,12 +177,119 @@ void test_list() {
 	TEST_VAL(it_sum, sum);
 }
 
+void TestPixel() {
+	JDW_Pixel tmp;
+	tmp.integer = 0;
+
+	TEST_VAL(tmp.a, 0);
+	TEST_VAL(tmp.r, 0);
+	TEST_VAL(tmp.g, 0);
+	TEST_VAL(tmp.b, 0);
+	TEST_VAL(tmp.integer, 0);
+
+	tmp.a = 16;
+	tmp.r = 32;
+	tmp.g = 64;
+	tmp.b = 128;
+
+	TEST_VAL(tmp.a, 16);
+	TEST_VAL(tmp.r, 32);
+	TEST_VAL(tmp.g, 64);
+	TEST_VAL(tmp.b, 128);
+	TEST_TRUE(tmp.integer != 0);
+}
+
+void TestIO() {
+	JDW_Image<JDW_Pixel, JDW_Pixel>* tmp_pImg1 = new JDW_Image<JDW_Pixel, JDW_Pixel>(iV2(2, 3));
+	tmp_pImg1->PutPixel(iV2(0,0), JDW_Pixel(0, 0, 0));
+	tmp_pImg1->PutPixel(iV2(1,0), JDW_Pixel(255, 0, 0));
+	tmp_pImg1->PutPixel(iV2(0,1), JDW_Pixel(0, 255, 0));
+	tmp_pImg1->PutPixel(iV2(1,1), JDW_Pixel(0, 0, 255));
+	tmp_pImg1->PutPixel(iV2(0,2), JDW_Pixel(255, 0, 255));
+	tmp_pImg1->PutPixel(iV2(1,2), JDW_Pixel(255, 255, 255));
+	tmp_pImg1->SetTrans(JDW_Pixel(255, 255, 255));
+
+	ofstream fout("test.data", ios::binary);
+	fout.write((char *)(&tmp_pImg1->GetSize()), sizeof(tmp_pImg1->GetSize()));
+	fout.write((char *)(tmp_pImg1), sizeof(*tmp_pImg1));
+	fout.close();
+
+	ifstream fin("test.data", ios::binary);
+
+	iV2 tmp_size = iV2();
+	fin.read((char *)(&tmp_size), sizeof(tmp_size));
+
+	TEST_VAL(tmp_size, tmp_pImg1->GetSize());
+
+	JDW_Image<JDW_Pixel, JDW_Pixel>* tmp_pImg2 = new JDW_Image<JDW_Pixel, JDW_Pixel>(tmp_size);
+	fin.read((char *)(tmp_pImg2), sizeof(*tmp_pImg2));
+	fin.close();
+	TEST_TRUE(tmp_pImg1->GetPixel(iV2(0, 0)) == tmp_pImg2->GetPixel(iV2(0, 0)));
+	TEST_TRUE(tmp_pImg1->GetPixel(iV2(1, 0)) == tmp_pImg2->GetPixel(iV2(1, 0)));
+	TEST_TRUE(tmp_pImg1->GetPixel(iV2(0, 1)) == tmp_pImg2->GetPixel(iV2(0, 1)));
+	TEST_TRUE(tmp_pImg1->GetPixel(iV2(1, 1)) == tmp_pImg2->GetPixel(iV2(1, 1)));
+	TEST_TRUE(tmp_pImg1->GetPixel(iV2(0, 2)) == tmp_pImg2->GetPixel(iV2(0, 2)));
+	TEST_TRUE(tmp_pImg1->GetPixel(iV2(1, 2)) == tmp_pImg2->GetPixel(iV2(1, 2)));
+	TEST_TRUE(tmp_pImg1->GetTrans() == tmp_pImg2->GetTrans());
+	TEST_TRUE(tmp_pImg1->GetSize() == tmp_pImg2->GetSize());
+}
+
+void TestSizes() {
+	TEST_VAL(sizeof(unsigned char), 1);
+	TEST_VAL(sizeof(char), 1);
+	TEST_VAL(sizeof(unsigned short), 2);
+	TEST_VAL(sizeof(short), 2);
+	TEST_VAL(sizeof(unsigned int), 4);
+	TEST_VAL(sizeof(int), 4);
+	TEST_VAL(sizeof(double), 8);
+	TEST_VAL(sizeof(long), 4);
+}
+
+void TestTypes() {
+	ui8 tmp_ui8 = 255;
+	i8 tmp_i8 = -128;
+	i16 tmp_i16 = -32768;
+	//ui32 tmp_ui32 = 4294967296;
+	i32 tmp_i32 = 2147483647;
+	d64 tmp_d64 = -1.1;
+
+	TEST_VAL(tmp_ui8, 255);
+	TEST_VAL(tmp_i8, -128);
+//	TEST_VAL(tmp_ui16, 65536);
+	TEST_VAL(tmp_i16, -32768);
+//	TEST_VAL(tmp_ui32, 4294967296);
+	TEST_VAL(tmp_i32, 2147483647);
+	tmp_i32 = -2147483647;
+	TEST_VAL(tmp_i32, -2147483647);
+	TEST_VAL(tmp_d64, -1.1);
+}
+
+void TestImage() {
+	JDW_Image<JDW_Pixel, JDW_Pixel>* tmp_pImg = new JDW_Image<JDW_Pixel, JDW_Pixel>(iV2(5, 5));
+
+	TEST_TRUE(tmp_pImg->IsInside(iV2(0, 0)));
+	TEST_TRUE(tmp_pImg->IsInside(iV2(0, 4)));
+	TEST_TRUE(tmp_pImg->IsInside(iV2(4, 0)));
+	TEST_TRUE(tmp_pImg->IsInside(iV2(4, 4)));
+
+	TEST_FALSE(tmp_pImg->IsInside(iV2(-1, -1)));
+	TEST_FALSE(tmp_pImg->IsInside(iV2(0, 5)));
+	TEST_FALSE(tmp_pImg->IsInside(iV2(5, 0)));
+	TEST_FALSE(tmp_pImg->IsInside(iV2(5, 5)));
+	TEST_TRUE(tmp_pImg->IsInside(iV2(-1, 3)));
+
+}
 int main() {
 	// All tests should go trough OK, and if so, no output be given.
 
-	test_v2();
-	test_v3();
-	test_list();
+	TestVector2d();
+	TestVector3d();
+	TestList();
+	TestPixel();
+	TestImage();
+	TestIO();
+	TestSizes();
+	TestTypes();
 
 	exit(0);
 }
